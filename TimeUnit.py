@@ -32,6 +32,7 @@ class TimeUnit:
         self.isAllDayTime = True
         self.time = arrow.now()
         self.time_normalization()
+        
 
     def time_normalization(self):
         self.norm_setyear()
@@ -631,6 +632,8 @@ class TimeUnit:
         pattern = re.compile(rule)
         match = pattern.search(self.exp_time)
         if match is not None:
+            self.normalizer.isHoliday = True
+            self.normalizer.isTimeSpan = True
             if self.tp.tunit[0] == -1:
                 self.tp.tunit[0] = int(self.normalizer.timeBase.split('-')[0])
             holi = match.group()

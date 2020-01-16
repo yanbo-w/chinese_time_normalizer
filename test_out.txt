@@ -1,0 +1,253 @@
+
+Input:---------------
+最近3天
+<regex.Match object; span=(0, 2), match='最近'>
+<regex.Match object; span=(2, 4), match='3天'>
+raw : 最近3天
+type : span
+items : [{'date': {'year': 2020, 'month': 1, 'day': 13}}, {'date': {'year': 2020, 'month': 1, 'day': 16}}]
+
+Input:---------------
+近3天
+<regex.Match object; span=(0, 3), match='近3天'>
+raw : 近3天
+type : span
+items : [{'date': {'year': 2020, 'month': 1, 'day': 13}}, {'date': {'year': 2020, 'month': 1, 'day': 16}}]
+
+Input:---------------
+这2天
+<regex.Match object; span=(0, 3), match='这2天'>
+raw : 这2天
+type : span
+items : [{'date': {'year': 2020, 'month': 1, 'day': 14}}, {'date': {'year': 2020, 'month': 1, 'day': 16}}]
+
+Input:---------------
+前4天
+<regex.Match object; span=(0, 3), match='前4天'>
+raw : 前4天
+type : span
+items : [{'date': {'year': 2020, 'month': 1, 'day': 12}}, {'date': {'year': 2020, 'month': 1, 'day': 16}}]
+
+Input:---------------
+最近几天
+<regex.Match object; span=(0, 2), match='最近'>
+<regex.Match object; span=(2, 4), match='几天'>
+raw : 最近几天
+type : fuzzy
+norm : 最近几天
+
+Input:---------------
+这几天
+<regex.Match object; span=(0, 3), match='这几天'>
+raw : 这几天
+type : fuzzy
+norm : 这几天
+
+Input:---------------
+近几天
+<regex.Match object; span=(0, 3), match='近几天'>
+raw : 近几天
+type : fuzzy
+norm : 近几天
+
+Input:---------------
+前几天
+<regex.Match object; span=(0, 3), match='前几天'>
+raw : 前几天
+type : fuzzy
+norm : 前几天
+
+Input:---------------
+最近
+<regex.Match object; span=(0, 2), match='最近'>
+raw : 最近
+type : fuzzy
+norm : 最近
+
+Input:---------------
+近期
+<regex.Match object; span=(0, 2), match='近期'>
+raw : 近期
+type : fuzzy
+norm : 近期
+
+Input:---------------
+这段时间
+raw : 
+type : fuzzy
+norm : 
+
+Input:---------------
+昨天
+<regex.Match object; span=(0, 2), match='昨天'>
+raw : 昨天
+type : point
+items : [{'date': {'year': 2020, 'month': 1, 'day': 15}}]
+
+Input:---------------
+上周1
+<regex.Match object; span=(0, 3), match='上周1'>
+raw : 上周1
+type : point
+items : [{'date': {'year': 2020, 'month': 1, 'day': 6}}]
+
+Input:---------------
+2月1日
+<regex.Match object; span=(0, 2), match='2月'>
+<regex.Match object; span=(2, 4), match='1日'>
+raw : 2月1日
+type : point
+items : [{'date': {'month': 2, 'day': 1}}]
+
+Input:---------------
+2月1日前后
+<regex.Match object; span=(0, 2), match='2月'>
+<regex.Match object; span=(2, 6), match='1日前后'>
+raw : 2月1日前后
+type : point
+items : [{'date': {'month': 2, 'day': 1}, 'around': 'around'}]
+
+Input:---------------
+春节前后
+<regex.Match object; span=(0, 4), match='春节前后'>
+raw : 春节前后
+type : span
+items : [{'date': {'year': 2020, 'month': 1, 'day': 24}, 'around': 'around'}, {'date': {'year': 2020, 'month': 1, 'day': 30}, 'around': 'around'}]
+
+Input:---------------
+明天下午3点
+<regex.Match object; span=(0, 2), match='明天'>
+<regex.Match object; span=(2, 4), match='下午'>
+<regex.Match object; span=(4, 6), match='3点'>
+raw : 明天下午3点
+type : point
+items : [{'date': {'year': 2020, 'month': 1, 'day': 17}, 'time': {'hour': 15}}]
+
+Input:---------------
+上午10点1刻
+<regex.Match object; span=(0, 2), match='上午'>
+<regex.Match object; span=(2, 7), match='10点1刻'>
+raw : 上午10点1刻
+type : point
+items : [{'date': {'year': 2020, 'month': 1, 'day': 17}, 'time': {'hour': 10, 'minute': 15}}]
+
+Input:---------------
+明天下午3点左右
+<regex.Match object; span=(0, 2), match='明天'>
+<regex.Match object; span=(2, 4), match='下午'>
+<regex.Match object; span=(4, 8), match='3点左右'>
+raw : 明天下午3点左右
+type : point
+items : [{'date': {'year': 2020, 'month': 1, 'day': 17}, 'time': {'hour': 15}}]
+
+Input:---------------
+明天下午3点以前
+<regex.Match object; span=(0, 2), match='明天'>
+<regex.Match object; span=(2, 4), match='下午'>
+<regex.Match object; span=(4, 6), match='3点'>
+<regex.Match object; span=(6, 8), match='以前'>
+raw : 明天下午3点以前
+type : point
+items : [{'date': {'year': 2020, 'month': 1, 'day': 17}, 'time': {'hour': 15}}]
+
+Input:---------------
+下周1
+<regex.Match object; span=(0, 3), match='下周1'>
+raw : 下周1
+type : point
+items : [{'date': {'year': 2020, 'month': 1, 'day': 20}}]
+
+Input:---------------
+1月20号下午3点到5点
+<regex.Match object; span=(0, 2), match='1月'>
+<regex.Match object; span=(2, 5), match='20号'>
+<regex.Match object; span=(5, 7), match='下午'>
+<regex.Match object; span=(7, 9), match='3点'>
+<regex.Match object; span=(10, 12), match='5点'>
+raw : 1月20号下午3点,5点
+type : span
+items : [{'date': {'year': 2020, 'month': 1, 'day': 20}, 'time': {'hour': 15}}, {'date': {'year': 2020, 'month': 1, 'day': 20}, 'time': {'hour': 17}}]
+
+Input:---------------
+今年1月份
+<regex.Match object; span=(0, 2), match='今年'>
+<regex.Match object; span=(2, 4), match='1月'>
+raw : 今年1月
+type : point
+items : [{'date': {'year': 2020, 'month': 1}}]
+
+Input:---------------
+今年国庆节
+<regex.Match object; span=(0, 2), match='今年'>
+<regex.Match object; span=(2, 5), match='国庆节'>
+raw : 今年国庆节
+type : span
+items : [{'date': {'year': 2020, 'month': 9, 'day': 30}}, {'date': {'year': 2020, 'month': 10, 'day': 6}}]
+
+Input:---------------
+5分钟
+<regex.Match object; span=(0, 3), match='5分钟'>
+raw : 5分钟
+type : delta
+items : [{'time': {'minute': 5}}]
+
+Input:---------------
+1天
+<regex.Match object; span=(0, 2), match='1天'>
+raw : 1天
+type : delta
+items : [{'date': {'day': 1}}]
+
+Input:---------------
+2星期
+<regex.Match object; span=(0, 3), match='2星期'>
+raw : 2星期
+type : delta
+items : [{'date': {'day': 14}}]
+
+Input:---------------
+每个月1号
+<regex.Match object; span=(0, 3), match='每个月'>
+<regex.Match object; span=(3, 5), match='1号'>
+raw : 每个月1号
+type : point
+items : [{'date': {'year': 2020, 'month': 2, 'day': 1}}]
+
+Input:---------------
+每周5
+<regex.Match object; span=(0, 2), match='每周'>
+raw : 每周
+type : fuzzy
+norm : 每周
+
+Input:---------------
+每周135
+<regex.Match object; span=(0, 2), match='每周'>
+raw : 每周
+type : fuzzy
+norm : 每周
+
+Input:---------------
+明年正月初1
+<regex.Match object; span=(0, 2), match='明年'>
+<regex.Match object; span=(3, 5), match='月初'>
+raw : 明年,月初
+type : fuzzy
+norm : 明年,月初
+
+Input:---------------
+每年正月初1
+<regex.Match object; span=(0, 2), match='每年'>
+<regex.Match object; span=(3, 5), match='月初'>
+raw : 每年,月初
+type : fuzzy
+norm : 每年,月初
+
+Input:---------------
+正月初1
+<regex.Match object; span=(1, 3), match='月初'>
+raw : 月初
+type : fuzzy
+norm : 月初
+
+Input:

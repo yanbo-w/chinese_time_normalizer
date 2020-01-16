@@ -7,14 +7,23 @@
 # @Changed : tianyuningmou
 
 from TimeNormalizer import TimeNormalizer # 引入包
+import sys
+
+sys.stdin = open('test_case.txt', 'r')
+sys.stdout = open("test_out.txt", "w")
 
 tn = TimeNormalizer()
 
-with open('test_case.txt', 'r') as f:
-    for line in f:
-        query = line.strip()
-        res = tn.parse(target=query) # target为待分析语句，timeBase为基准时间默认是当前时间
-        print(res)
+while True:
+    try:
+        line = input('\nInput:')
+    except EOFError:
+        break
+    query = line.strip()
+    print('---------------')
+    res = tn.parse(target=query) # target为待分析语句，timeBase为基准时间默认是当前时间
+    for r in res:
+        print(r,':',res[r])
 
 
 #

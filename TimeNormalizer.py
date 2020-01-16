@@ -82,6 +82,7 @@ class TimeNormalizer:
         :return: 时间单元数组
         """
         self.isTimeSpan = False
+        self.isHoliday = False
         self.invalidSpan = False
         self.timeSpan = ''
         self.target = self._filter(target)
@@ -93,37 +94,77 @@ class TimeNormalizer:
         dic = {}
         res = self.timeToken
 
+        dic['raw'] = ''
+        for r in res:
+            dic['raw'] += r.exp_time + ','
+        dic['raw'] = dic['raw'].strip(',')
+
         if self.isTimeSpan:
             if self.invalidSpan:
-                dic['error'] = 'no time pattern could be extracted.'
+                dic['type'] = 'fuzzy'
+                dic['norm'] = dic['raw']
             else:
-                result = {}
-                dic['type'] = 'timedelta'
-                dic['timedelta'] = self.timeSpan
-                # print(dic['timedelta'])
-                index = dic['timedelta'].find('days')
+                if self.isHoliday:
+                    start_shift = [0,0,-1]
+                    shift = [0,0,6]
+                    d = res[0].tp_origin.tunit
+                    start_time = arrow.get(d[0],d[1],d[2])
+                    start_time = start_time.shift(years=start_shift[0],months=start_shift[1],days=start_shift[2])
+                    stop_time = start_time.shift(years=shift[0],months=shift[1],days=shift[2])
+                    
+                    start_time = [start_time.year,start_time.month,start_time.day,-1,-1,-1]
+                    stop_time = [stop_time.year,stop_time.month,stop_time.day,-1,-1,-1]
+                    dic['type'] = 'span'
+                    dic['items'] = []
+                    dic['items'].append(self.tunit2dic(start_time))
+                    dic['items'].append(self.tunit2dic(stop_time))
 
-                days = int(dic['timedelta'][:index-1])
-                result['year'] = int(days / 365)
-                result['month'] = int(days / 30 - result['year'] * 12)
-                result['day'] = int(days - result['year'] * 365 - result['month'] * 30)
-                index = dic['timedelta'].find(',')
-                time = dic['timedelta'][index+1:]
-                time = time.split(':')
-                result['hour'] = int(time[0])
-                result['minute'] = int(time[1])
-                result['second'] = int(time[2])
-                dic['timedelta'] = result
+                elif re.match('(这|近|前|(最近))([零一二三四五六七八九十百千万]+|\d+)天',dic['raw']):
+                    shift = res[0].tp_origin.tunit
+                    for t in range(len(shift)):
+                        if shift[t] == -1:
+                            shift[t] = 0
+                    stop_time = arrow.get(timeBase)
+                    start_time = stop_time.shift(years=-shift[0],months=-shift[1],days=-shift[2])
+                    start_time = [start_time.year,start_time.month,start_time.day,-1,-1,-1]
+                    stop_time = [stop_time.year,stop_time.month,stop_time.day,-1,-1,-1]
+                    dic['type'] = 'span'
+                    dic['items'] = []
+                    dic['items'].append(self.tunit2dic(start_time))
+                    dic['items'].append(self.tunit2dic(stop_time))
+                    
+                else:
+                    dic['type'] = 'delta'
+                    dic['items'] = [self.tunit2dic(res[0].tp_origin.tunit)]
         else:
             if len(res) == 0:
-                dic['error'] = 'no time pattern could be extracted.'
+                dic['type'] = 'fuzzy'
+                dic['norm'] = dic['raw']
             elif len(res) == 1:
-                dic['type'] = 'timestamp'
-                dic['timestamp'] = res[0].time.format("YYYY-MM-DD HH:mm:ss")
+                dic['type'] = 'point'
+                dic['items'] = [self.tunit2dic(res[0].tp_origin.tunit)]
             else:
-                dic['type'] = 'timespan'
-                dic['timespan'] = [res[0].time.format("YYYY-MM-DD HH:mm:ss"), res[1].time.format("YYYY-MM-DD HH:mm:ss")]
-        return res,json.dumps(dic)
+                dic['type'] = 'span'
+                dic['items'] = []
+                dic['items'].append(self.tunit2dic(res[0].tp_origin.tunit))
+                dic['items'].append(self.tunit2dic(res[1].tp_origin.tunit))
+        
+        if dic['raw'].endswith('前后'):
+            for item in dic['items']:
+                item['around'] = 'around'
+
+        return dic
+
+    def tunit2dic(self, tunit):
+        res = {}
+        time_scale = ['date', 'date', 'date', 'time', 'time', 'time']
+        time_name = ['year', 'month', 'day', 'hour', 'minute', 'second']
+        for scale, name, value in zip(time_scale, time_name, tunit):
+            if value != -1:
+                if scale not in res:
+                    res[scale] = {}
+                res[scale][name] = value
+        return res
 
     def __preHandling(self):
         """
@@ -145,9 +186,10 @@ class TimeNormalizer:
         endline = -1
         rpointer = 0
         temp = []
-
+        print(self.target)
         match = self.pattern.finditer(self.target)
         for m in match:
+            print(m)
             startline = m.start()
             if startline == endline:
                 rpointer -= 1
@@ -159,8 +201,8 @@ class TimeNormalizer:
         res = []
         # 时间上下文： 前一个识别出来的时间会是下一个时间的上下文，用于处理：周六3点到5点这样的多个时间的识别，第二个5点应识别到是周六的。
         contextTp = TimePoint()
-        print(self.timeBase)
-        print('temp',temp)
+        # print(self.timeBase)
+        # print('temp',temp)
         for i in range(0, rpointer):
             # 这里是一个类嵌套了一个类
             res.append(TimeUnit(temp[i], self, contextTp))
