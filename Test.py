@@ -10,10 +10,11 @@ from TimeNormalizer import TimeNormalizer # 引入包
 
 tn = TimeNormalizer()
 
-while(1):
-    query = input('Input:')
-    res = tn.parse(target=query) # target为待分析语句，timeBase为基准时间默认是当前时间
-    print(res)
+with open('test_case.txt', 'r') as f:
+    for line in f:
+        query = line.strip()
+        res = tn.parse(target=query) # target为待分析语句，timeBase为基准时间默认是当前时间
+        print(res)
 
 
 #
