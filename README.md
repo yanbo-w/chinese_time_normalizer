@@ -1,7 +1,6 @@
 ## 简介
-Time-NLP的python3版本   
-python 版本https://github.com/sunfiyes/Time-NLPY  
-Java 版本https://github.com/shinyke/Time-NLP
+Time-NLP的python3版本的分叉，根据自己定义的时间协议进行修改后的结果。
+
 ## 功能说明
 用于句子中时间词的抽取和转换  
 详情请见test.py
