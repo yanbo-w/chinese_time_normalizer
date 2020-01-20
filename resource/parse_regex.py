@@ -6,8 +6,8 @@ with open('regex.txt', 'r') as f:
     p_num = 0
     pattern = ''
     for char in text:
-        if p_num == 0:
-            if '春节' in pattern:
+        if p_num == 1:
+            if '几' in pattern and '月' in pattern:
                 print(pattern)
             pattern = ''
         if char == '(':

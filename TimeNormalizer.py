@@ -99,21 +99,42 @@ class TimeNormalizer:
             dic['raw'] += r.exp_time + ','
         dic['raw'] = dic['raw'].strip(',')
 
+        if re.match(r'(这|近|前|(最近))([零一二三四五六七八九十百千万]+|\d+)(天|周|年|月)',dic['raw']):
+            shift = res[0].tp_origin.tunit
+            for t in range(len(shift)):
+                if shift[t] == -1:
+                    shift[t] = 0
+            stop_time = arrow.get(timeBase)
+            start_time = stop_time.shift(years=-shift[0],months=-shift[1],days=-shift[2])
+            start_time = [start_time.year,start_time.month,start_time.day,-1,-1,-1]
+            stop_time = [stop_time.year,stop_time.month,stop_time.day,-1,-1,-1]
+            dic['type'] = 'span'
+            dic['items'] = []
+            dic['items'].append(self.tunit2dic(start_time))
+            dic['items'].append(self.tunit2dic(stop_time))
+            return dic
+
         if self.isTimeSpan:
             if self.invalidSpan:
                 dic['type'] = 'fuzzy'
-                if re.match(r'(最近|这|近|前)几天',dic['raw']):
-                    dic['norm'] = '近几天'
+                if re.match(r'^(最近|这|近|前)几(天|周|月|年)$',dic['raw']):
+                    dic['norm'] = '近几'+dic['raw'][-1]
                 else:
                     dic['norm'] = dic['raw']
             else:
                 if self.isHoliday:
-                    start_shift = [0,0,-1]
-                    shift = [0,0,6]
+                    # 节日日期处理
+                    holi_days = {'春节':(-1,5),'元旦':(0,0),'清明':(0,2),'劳动节':(0,4),'端午':(0,2),'中秋':(0,0),'国庆':(0,6)}
+                    if self.isHoliday in holi_days:
+                        start_shift = [0,0,holi_days[self.isHoliday][0]]
+                        shift = [0,0,holi_days[self.isHoliday][1]]
+                    else:
+                        start_shift = [0,0,0]
+                        shift = [0,0,1]
                     d = res[0].tp_origin.tunit
-                    start_time = arrow.get(d[0],d[1],d[2])
-                    start_time = start_time.shift(years=start_shift[0],months=start_shift[1],days=start_shift[2])
-                    stop_time = start_time.shift(years=shift[0],months=shift[1],days=shift[2])
+                    base_time = arrow.get(d[0],d[1],d[2])
+                    start_time = base_time.shift(years=start_shift[0],months=start_shift[1],days=start_shift[2])
+                    stop_time = base_time.shift(years=shift[0],months=shift[1],days=shift[2])
                     
                     start_time = [start_time.year,start_time.month,start_time.day,-1,-1,-1]
                     stop_time = [stop_time.year,stop_time.month,stop_time.day,-1,-1,-1]
@@ -121,21 +142,6 @@ class TimeNormalizer:
                     dic['items'] = []
                     dic['items'].append(self.tunit2dic(start_time))
                     dic['items'].append(self.tunit2dic(stop_time))
-
-                elif re.match(r'(这|近|前|(最近))([零一二三四五六七八九十百千万]+|\d+)天',dic['raw']):
-                    shift = res[0].tp_origin.tunit
-                    for t in range(len(shift)):
-                        if shift[t] == -1:
-                            shift[t] = 0
-                    stop_time = arrow.get(timeBase)
-                    start_time = stop_time.shift(years=-shift[0],months=-shift[1],days=-shift[2])
-                    start_time = [start_time.year,start_time.month,start_time.day,-1,-1,-1]
-                    stop_time = [stop_time.year,stop_time.month,stop_time.day,-1,-1,-1]
-                    dic['type'] = 'span'
-                    dic['items'] = []
-                    dic['items'].append(self.tunit2dic(start_time))
-                    dic['items'].append(self.tunit2dic(stop_time))
-                    
                 else:
                     dic['type'] = 'delta'
                     dic['items'] = [self.tunit2dic(res[0].tp_origin.tunit)]

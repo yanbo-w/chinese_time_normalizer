@@ -632,7 +632,7 @@ class TimeUnit:
         pattern = re.compile(rule)
         match = pattern.search(self.exp_time)
         if match is not None:
-            self.normalizer.isHoliday = True
+            self.normalizer.isHoliday = match.group()
             self.normalizer.isTimeSpan = True
             if self.tp.tunit[0] == -1:
                 self.tp.tunit[0] = int(self.normalizer.timeBase.split('-')[0])
