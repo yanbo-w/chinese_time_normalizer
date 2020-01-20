@@ -20,6 +20,7 @@ while True:
     except EOFError:
         break
     query = line.strip()
+    query = query.split('\t')[0]
     print('---------------')
     res = tn.parse(target=query) # target为待分析语句，timeBase为基准时间默认是当前时间
     for r in res:

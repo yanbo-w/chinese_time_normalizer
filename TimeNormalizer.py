@@ -10,9 +10,9 @@ import arrow
 import json
 import os
 
-from StringPreHandler import StringPreHandler
-from TimePoint import TimePoint
-from TimeUnit import TimeUnit
+from src.ner.chinese_time_normalizer.StringPreHandler import StringPreHandler
+from src.ner.chinese_time_normalizer.TimePoint import TimePoint
+from src.ner.chinese_time_normalizer.TimeUnit import TimeUnit
 
 # 时间表达式识别的主要工作类
 class TimeNormalizer:
@@ -102,7 +102,10 @@ class TimeNormalizer:
         if self.isTimeSpan:
             if self.invalidSpan:
                 dic['type'] = 'fuzzy'
-                dic['norm'] = dic['raw']
+                if re.match(r'(最近|这|近|前)几天',dic['raw']):
+                    dic['norm'] = '近几天'
+                else:
+                    dic['norm'] = dic['raw']
             else:
                 if self.isHoliday:
                     start_shift = [0,0,-1]
@@ -119,7 +122,7 @@ class TimeNormalizer:
                     dic['items'].append(self.tunit2dic(start_time))
                     dic['items'].append(self.tunit2dic(stop_time))
 
-                elif re.match('(这|近|前|(最近))([零一二三四五六七八九十百千万]+|\d+)天',dic['raw']):
+                elif re.match(r'(这|近|前|(最近))([零一二三四五六七八九十百千万]+|\d+)天',dic['raw']):
                     shift = res[0].tp_origin.tunit
                     for t in range(len(shift)):
                         if shift[t] == -1:
@@ -149,7 +152,7 @@ class TimeNormalizer:
                 dic['items'].append(self.tunit2dic(res[0].tp_origin.tunit))
                 dic['items'].append(self.tunit2dic(res[1].tp_origin.tunit))
         
-        if dic['raw'].endswith('前后'):
+        if dic['raw'].endswith('前后') or dic['raw'].endswith('左右'):
             for item in dic['items']:
                 item['around'] = 'around'
 
@@ -186,10 +189,10 @@ class TimeNormalizer:
         endline = -1
         rpointer = 0
         temp = []
-        print(self.target)
+        # print(self.target)
         match = self.pattern.finditer(self.target)
         for m in match:
-            print(m)
+            # print(m)
             startline = m.start()
             if startline == endline:
                 rpointer -= 1

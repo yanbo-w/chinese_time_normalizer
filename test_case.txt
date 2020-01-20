@@ -1,33 +1,17 @@
-最近3天
-近3天
-这2天
-前4天
-最近几天
-这几天
-近几天
-前几天
-最近
-近期
-这段时间
-昨天
-上周一
-2月1日
-2月1日前后
-春节前后
-明天下午3点
-上午10点一刻
-明天下午3点左右
-明天下午3点以前
-下周一
-1月20号下午3点到5点
-今年1月份
-今年国庆节
-五分钟
-1天
-2个星期
-每个月1号
-每周五
-每周的一三五
-明年正月初一
-每年正月初一
-正月初一
+2月1日前后有没有人出现在长宁区	search_person	time:2月1日前后;location:长宁区
+昨天下午3点到今天下午4点出现在长宁区，戴口罩的男人有哪些	search_person	time:昨天下午3点到4点;location:长宁区;group:男人;feature:戴口罩
+王小明最近两天给谁打过电话	dial-phone	person:王晓明
+打电话给13442345675吧	dial_phone	phone_num:13442345675
+能找到110101199901010101吗	search_person	id_card:110101199901010101
+看一下1HG门口的摄像头	open_device	place:1HG门口;device:摄像头
+打开预警库	open_menu_page	page:预警库
+第3张抓拍是谁	search_person	index:3
+有没有叫张三的一个人	search_person	name:张三
+李四在在逃库或者常口库里吗	search_person	name:李四;database:在逃库,常口库
+今天上午10点到12点天气怎么样	search_person	time:今天上午10点到12点;
+第3张抓拍去过哪里	search_person_location	index:3
+第3张抓拍有出现在过长宁区吗	search_person_location	index:3;location:长宁区
+第3张抓拍昨天晚上去过哪里	search_person_location	index:3;time:昨天晚上
+第2排第3个人最近去过哪里	search_person_location	row:2;index:3;time:最近
+最近3天跟110101199901010101一起在外滩出现过3次以上的人有哪些	search_along_person	time:最近3天;along_id_card:110101199901010101;locaiton:外滩;times:3
+昨天有谁跟这个人一起前后10s走在一起	search_along_person	time:昨天
